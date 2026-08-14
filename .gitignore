@@ -1,0 +1,18 @@
+# Environnements
+.env
+.venv
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Node
+node_modules/
+dist/
+
+# Docker
+*.log
