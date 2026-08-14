@@ -9,4 +9,5 @@ class User(Base):
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     email = Column(String, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    full_name = Column(String, nullable=True)
     role = Column(String, nullable=False, default="OWNER")  # OWNER, ADMIN, MANAGER, STAFF
