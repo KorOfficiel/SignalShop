@@ -1,181 +1,137 @@
 # Guide d'utilisation de SignalShop
 
-Bienvenue dans votre espace professionnel SignalShop. Ce guide vous explique comment utiliser toutes les fonctionnalités de votre assistant commercial.
-
-## Table des matières
-1. Installation
-2. Connexion au tableau de bord
-3. Découvrir le tableau de bord
-4. Gérer le catalogue
-5. Gérer les commandes
-6. Gérer les créneaux et la livraison
-7. Gérer les clients
-8. Gérer les conversations
-9. Gérer les utilisateurs et les permissions
-10. Notifications
-11. Statistiques
-12. Paramètres
-13. Dépannage rapide
+Bienvenue ! Ce guide vous explique comment installer, configurer et utiliser SignalShop, votre assistant commercial connecté à Signal.
 
 ---
 
 ## 1. Installation
 
-Pour installer SignalShop sur votre ordinateur, suivez ces étapes :
-
 ### Prérequis
-- Avoir un PC Windows ou Linux.
-- Avoir Docker Desktop installé (téléchargeable sur https://www.docker.com/products/docker-desktop).
-- Avoir Git installé (https://git-scm.com/downloads).
+- Un PC Windows 10/11.
+- Docker Desktop (téléchargeable gratuitement sur https://www.docker.com/products/docker-desktop).
+- Git (https://git-scm.com/downloads).
+- Python 3.12+ (https://www.python.org/downloads/).
 
 ### Étapes d'installation
-1. Double-cliquez sur le fichier `install.bat` (Windows) ou exécutez `install.sh` (Linux).
-2. Le script vérifie Docker et Git.
-3. Il vous demande l'email et le mot de passe administrateur (par défaut : `admin@example.com` / `admin1234`).
-4. Le script crée le fichier `.env` et lance les services.
-5. Une fois terminé, le tableau de bord est accessible sur `http://localhost:3000`.
+1. Double-cliquez sur `install.bat`.
+2. Suivez les instructions à l'écran :
+   - Email administrateur (ex : `admin@example.com`)
+   - Mot de passe administrateur (ex : `admin1234`)
+   - Numéro de service Signal (laissez vide si vous n'en avez pas encore)
+3. Le script va :
+   - Créer le fichier `.env`.
+   - Démarrer les services Docker (base de données, backend, frontend).
+   - Initialiser la base de données.
+   - Créer l'utilisateur administrateur.
+4. Une fois terminé, ouvrez votre navigateur sur `http://localhost:3000`.
+5. Connectez-vous avec l'email et le mot de passe choisis.
 
 ---
 
-## 2. Connexion au tableau de bord
+## 2. Démarrage et arrêt
 
-1. Ouvrez votre navigateur (Chrome ou Edge recommandé).
-2. Allez sur `http://localhost:3000`.
-3. Entrez l'email administrateur et le mot de passe définis lors de l'installation.
-4. Cliquez sur **Se connecter**.
+### Démarrer
+- Double-cliquez sur `start_system.bat`.
 
----
-
-## 3. Découvrir le tableau de bord
-
-Le tableau de bord se compose de :
-- **Barre latérale** : les différents modules (Produits, Commandes, etc.).
-- **En-tête** : le nom de l'application et le bouton de déconnexion.
-- **Contenu principal** : les informations du module sélectionné.
-
-Sur mobile, la barre latérale se replie ; utilisez le bouton ☰ pour la faire apparaître.
+### Arrêter
+- Double-cliquez sur `stop_system.bat`.
 
 ---
 
-## 4. Gérer le catalogue
+## 3. Utilisation du tableau de bord
 
-### Catégories
-- Allez dans **Catégories**.
-- Cliquez sur **Ajouter une catégorie**.
-- Remplissez le nom, la description, la position.
-- Cliquez sur **Enregistrer**.
+### 3.1 Tableau de bord
+La page d'accueil affiche des indicateurs : produits, commandes, clients, etc. Cliquez sur une carte pour accéder à la section correspondante.
 
-### Produits
+### 3.2 Gérer les produits
 - Allez dans **Produits**.
 - Cliquez sur **Ajouter un produit**.
-- Remplissez le nom, la description, le prix (en centimes : 1400 = 14 €), l'unité, le mode de stock, la quantité, la catégorie (liste déroulante).
-- Cliquez sur **Enregistrer**.
+- Remplissez les champs : nom, description, prix en centimes, unité, stock, catégorie.
+- Cliquez **Enregistrer**.
 
-### Variantes et Options
-Vous pouvez ajouter des variantes (ex : Chocolat Noir, Lait, Blanc) et des options (ex : taille, emballage) via les menus correspondants.
+### 3.3 Gérer les catégories
+- Allez dans **Catégories**.
+- Ajoutez, modifiez ou supprimez des catégories.
 
----
+### 3.4 Gérer les variantes et options
+- Utilisez les pages **Variantes** et **Options** pour configurer des déclinaisons de produits (ex : tailles, parfums).
 
-## 5. Gérer les commandes
-
+### 3.5 Gérer les commandes
 - Allez dans **Commandes**.
-- Vous voyez la liste des commandes avec leur statut.
-- Cliquez sur **Détails** pour voir les articles et modifier le statut.
-- Utilisez **Annuler la commande** pour annuler (libère le stock et le créneau).
-- Utilisez **Supprimer définitivement** pour effacer la commande.
+- Pour créer une commande manuelle : **Nouvelle commande**.
+- Sélectionnez le client, le produit, la quantité, le créneau et la zone de livraison.
+- Cliquez **Créer la commande**.
+- Pour changer le statut : ouvrez le détail de la commande et utilisez le menu déroulant.
+- Pour annuler : **Annuler la commande**.
+- Pour supprimer : **Supprimer définitivement**.
 
-### Créer une commande manuellement
-- Cliquez sur **Nouvelle commande**.
-- Sélectionnez le client, le créneau de livraison (optionnel), la zone de livraison (optionnel).
-- Ajoutez un ou plusieurs articles (produit + quantité).
-- Cliquez sur **Créer la commande**.
-
----
-
-## 6. Gérer les créneaux et la livraison
-
-### Créneaux
-- Allez dans **Créneaux**.
-- Cliquez sur **Ajouter un créneau**.
-- Définissez le début, la fin, la capacité.
-- Enregistrez.
-
-### Zones de livraison
-- Allez dans **Livraison**.
-- Ajoutez une zone avec son nom, ses frais, son minimum.
-- Activez/désactivez selon besoin.
-
----
-
-## 7. Gérer les clients
-
+### 3.6 Gérer les clients
 - Allez dans **Clients**.
-- Ajoutez un client en renseignant son numéro Signal (sous forme de hash pour l'instant).
-- Modifiez ou supprimez des clients.
+- Ajoutez un client en renseignant son numéro Signal (ou un hash).
+- Modifiez ou supprimez selon besoin.
 
----
-
-## 8. Gérer les conversations
-
+### 3.7 Conversations
 - Allez dans **Conversations**.
-- Sélectionnez une conversation dans la liste.
-- Visualisez l'historique des messages.
-- Envoyez un message en tapant et en appuyant sur **Entrée** ou sur le bouton **Envoyer**.
-- Utilisez les boutons **Prendre la main**, **Repasser à l'IA**, **Stop IA**, **Fermer** selon la situation.
+- Sélectionnez une conversation pour voir l'historique.
+- Écrivez votre message et appuyez sur **Entrée** pour envoyer.
+- Utilisez les boutons **Prendre la main**, **Repasser à l'IA**, **Stop IA**, **Fermer** pour gérer l'état.
 
-> **Note** : Tant que vous n'avez pas pris la main, l'IA répond automatiquement aux clients. Quand vous prenez la main, l'IA se tait.
+> **Note** : Tant que vous n'avez pas pris la main, l'IA répond automatiquement aux clients.
 
----
+### 3.8 Notifications
+- Allez dans **Notifications** pour voir les événements (nouvelles commandes, stock faible, etc.).
+- Marquez comme lu ou supprimez.
 
-## 9. Gérer les utilisateurs et les permissions
+### 3.9 Évaluations
+- Consultez et supprimez les évaluations clients (note sur 5 + commentaire).
 
-### Utilisateurs
-- Allez dans **Utilisateurs**.
-- Ajoutez des comptes pour vos employés (STAFF, MANAGER, etc.).
-- Modifiez leurs informations ou supprimez-les.
+### 3.10 Statistiques
+- Visualisez le chiffre d'affaires, les commandes par jour et les produits les plus vendus.
 
-### Permissions
-- Allez dans **Permissions**.
-- Cochez/décochez les permissions pour chaque rôle.
-- Enregistrez.
+### 3.11 Permissions
+- Allez dans **Permissions** pour définir ce que chaque rôle (ADMIN, MANAGER, STAFF) peut faire.
+- Cochez/décochez puis **Enregistrer**.
 
----
-
-## 10. Notifications
-
-- Allez dans **Notifications** pour voir la liste des événements (nouvelles commandes, stock faible, etc.).
-- Marquez-les comme lues ou tout marquer comme lu.
-
----
-
-## 11. Statistiques
-
-- Allez dans **Statistiques**.
-- Consultez le chiffre d'affaires, les commandes par jour et les produits les plus vendus.
+### 3.12 Paramètres
+- Allez dans **Paramètres** pour :
+  - Changer le nom de l'application.
+  - Modifier le message d'accueil.
+  - Choisir le ton (vouvoiement/tutoiement).
+  - Renseigner le numéro de service Signal.
+  - Activer/désactiver le son.
 
 ---
 
-## 12. Paramètres
+## 4. Installation sur mobile (PWA)
 
-- Allez dans **Paramètres**.
-- Changez le nom de l'application, le message d'accueil, le ton (vouvoiement/tutoiement), activez/désactivez le son.
-- Enregistrez.
+SignalShop peut être installé sur votre téléphone comme une application.
+
+### Android (Chrome)
+1. Ouvrez le dashboard dans Chrome.
+2. Appuyez sur les **trois points** ⋮.
+3. Choisissez **Installer l'application** (ou **Ajouter à l'écran d'accueil**).
+4. Validez.
+
+### iPhone (Safari)
+1. Ouvrez le dashboard dans Safari.
+2. Appuyez sur **Partager** (carré avec flèche).
+3. Sélectionnez **Sur l'écran d'accueil**.
+4. Validez.
 
 ---
 
-## 13. Dépannage rapide
+## 5. Dépannage rapide
 
 | Problème | Solution |
 |----------|----------|
-| Le dashboard ne s'affiche pas | Vérifiez que Docker tourne et que le conteneur frontend est actif (`docker compose ps`). |
-| Impossible de se connecter | Vérifiez l'email et le mot de passe. Si oubli, exécutez le script de création d'utilisateur initial. |
-| L'IA ne répond pas | Assurez-vous d'être en état `AI_ACTIVE` dans la conversation. Si un humain a pris la main, l'IA est en pause. |
-| Stock faible | Une notification est créée ; ajustez le stock dans Produits. |
-| Les commandes ne passent pas | Vérifiez la capacité du créneau et le stock disponible. |
-| Le tunnel Cloudflare ne marche pas | Relancez `cloudflared tunnel --url http://localhost:3000` et gardez la fenêtre ouverte. |
+| Le site ne s'affiche pas | Vérifiez que Docker Desktop tourne et que les conteneurs sont actifs (`docker compose ps`). |
+| Identifiants invalides | Réinitialisez le mot de passe avec `docker exec -it signalshop_backend python -m scripts.create_initial_user`. |
+| L'IA ne répond pas | Assurez-vous qu'aucun humain n'a pris la main dans la conversation. |
+| Les messages Signal ne partent pas | Vérifiez que le bridge est lancé et que le numéro de service est configuré dans Paramètres. |
+| Le bridge ne démarre pas | Vérifiez que Python et signal-cli sont installés et que le numéro est valide. |
 
 ---
 
-## Support
+## 6. Support
 
 Pour toute question, contactez votre administrateur technique.

@@ -1,18 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.user import Token, UserRead, UserCreate
+from app.schemas.user import Token, UserRead
 from app.core.security import verify_password, create_access_token, decode_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+security = HTTPBearer()
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    """Récupère l'utilisateur courant à partir du token JWT."""
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    token = credentials.credentials
     payload = decode_access_token(token)
     if not payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token invalide")
@@ -25,10 +28,14 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     return user
 
 @router.post("/login", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(
+    username: str,
+    password: str,
+    db: Session = Depends(get_db)
+):
     """Authentifie un utilisateur et retourne un token JWT."""
-    user = db.query(User).filter(User.email == form_data.username).first()
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    user = db.query(User).filter(User.email == username).first()
+    if not user or not verify_password(password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email ou mot de passe incorrect",
