@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: signalshop_db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -17,7 +16,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: signalshop_redis
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -29,7 +27,6 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.backend
-    container_name: signalshop_backend
     restart: unless-stopped
     env_file:
       - ../.env
@@ -44,14 +41,12 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.frontend.prod
-    container_name: signalshop_frontend
     restart: unless-stopped
     depends_on:
       - backend
 
   caddy:
     image: caddy:2-alpine
-    container_name: signalshop_caddy
     restart: unless-stopped
     ports:
       - "80:80"
