@@ -4,27 +4,19 @@ Bienvenue ! Ce guide vous explique comment installer, configurer et utiliser Sig
 
 ---
 
-## 1. Installation
+## 1. Installation simplifiée
 
-### Prérequis
-- Un PC Windows 10/11.
-- Docker Desktop (téléchargeable gratuitement sur https://www.docker.com/products/docker-desktop).
-- Git (https://git-scm.com/downloads).
-- Python 3.12+ (https://www.python.org/downloads/).
+### Méthode 1 : Utiliser l'installateur graphique (recommandé)
+1. Double-cliquez sur `SignalShop_Installer.exe`.
+2. Remplissez les champs (email, mot de passe, numéro Signal).
+3. Cliquez sur **Installer**.
+4. Attendez la fin de l'installation.
+5. Ouvrez votre navigateur sur `http://localhost:3000`.
 
-### Étapes d'installation
+### Méthode 2 : Utiliser le script batch
 1. Double-cliquez sur `install.bat`.
-2. Suivez les instructions à l'écran :
-   - Email administrateur (ex : `admin@example.com`)
-   - Mot de passe administrateur (ex : `admin1234`)
-   - Numéro de service Signal (laissez vide si vous n'en avez pas encore)
-3. Le script va :
-   - Créer le fichier `.env`.
-   - Démarrer les services Docker (base de données, backend, frontend).
-   - Initialiser la base de données.
-   - Créer l'utilisateur administrateur.
-4. Une fois terminé, ouvrez votre navigateur sur `http://localhost:3000`.
-5. Connectez-vous avec l'email et le mot de passe choisis.
+2. Suivez les instructions.
+3. Ouvrez `http://localhost:3000`.
 
 ---
 
@@ -41,82 +33,57 @@ Bienvenue ! Ce guide vous explique comment installer, configurer et utiliser Sig
 ## 3. Utilisation du tableau de bord
 
 ### 3.1 Tableau de bord
-La page d'accueil affiche des indicateurs : produits, commandes, clients, etc. Cliquez sur une carte pour accéder à la section correspondante.
+La page d'accueil affiche des indicateurs. Cliquez sur une carte pour accéder à la section.
 
 ### 3.2 Gérer les produits
 - Allez dans **Produits**.
 - Cliquez sur **Ajouter un produit**.
-- Remplissez les champs : nom, description, prix en centimes, unité, stock, catégorie.
-- Cliquez **Enregistrer**.
+- Remplissez et enregistrez.
 
 ### 3.3 Gérer les catégories
 - Allez dans **Catégories**.
-- Ajoutez, modifiez ou supprimez des catégories.
+- Ajoutez/modifiez/supprimez.
 
 ### 3.4 Gérer les variantes et options
-- Utilisez les pages **Variantes** et **Options** pour configurer des déclinaisons de produits (ex : tailles, parfums).
+- Utilisez les pages correspondantes.
 
 ### 3.5 Gérer les commandes
 - Allez dans **Commandes**.
-- Pour créer une commande manuelle : **Nouvelle commande**.
-- Sélectionnez le client, le produit, la quantité, le créneau et la zone de livraison.
-- Cliquez **Créer la commande**.
-- Pour changer le statut : ouvrez le détail de la commande et utilisez le menu déroulant.
-- Pour annuler : **Annuler la commande**.
-- Pour supprimer : **Supprimer définitivement**.
+- **Nouvelle commande** pour créer manuellement.
+- Changez statut, annulez, supprimez.
 
 ### 3.6 Gérer les clients
 - Allez dans **Clients**.
-- Ajoutez un client en renseignant son numéro Signal (ou un hash).
-- Modifiez ou supprimez selon besoin.
 
 ### 3.7 Conversations
 - Allez dans **Conversations**.
-- Sélectionnez une conversation pour voir l'historique.
-- Écrivez votre message et appuyez sur **Entrée** pour envoyer.
-- Utilisez les boutons **Prendre la main**, **Repasser à l'IA**, **Stop IA**, **Fermer** pour gérer l'état.
-
-> **Note** : Tant que vous n'avez pas pris la main, l'IA répond automatiquement aux clients.
+- Sélectionnez une conversation, envoyez un message.
 
 ### 3.8 Notifications
-- Allez dans **Notifications** pour voir les événements (nouvelles commandes, stock faible, etc.).
-- Marquez comme lu ou supprimez.
+- Allez dans **Notifications**.
 
 ### 3.9 Évaluations
-- Consultez et supprimez les évaluations clients (note sur 5 + commentaire).
+- Consultez/supprimez.
 
 ### 3.10 Statistiques
-- Visualisez le chiffre d'affaires, les commandes par jour et les produits les plus vendus.
+- Visualisez CA, commandes par jour, top produits.
 
 ### 3.11 Permissions
-- Allez dans **Permissions** pour définir ce que chaque rôle (ADMIN, MANAGER, STAFF) peut faire.
-- Cochez/décochez puis **Enregistrer**.
+- Allez dans **Permissions**.
 
 ### 3.12 Paramètres
-- Allez dans **Paramètres** pour :
-  - Changer le nom de l'application.
-  - Modifier le message d'accueil.
-  - Choisir le ton (vouvoiement/tutoiement).
-  - Renseigner le numéro de service Signal.
-  - Activer/désactiver le son.
+- Changez nom, message, ton, numéro Signal, son.
 
 ---
 
 ## 4. Installation sur mobile (PWA)
 
-SignalShop peut être installé sur votre téléphone comme une application.
-
 ### Android (Chrome)
-1. Ouvrez le dashboard dans Chrome.
-2. Appuyez sur les **trois points** ⋮.
-3. Choisissez **Installer l'application** (ou **Ajouter à l'écran d'accueil**).
-4. Validez.
+1. Ouvrez le dashboard.
+2. Menu ⋮ → **Installer l'application**.
 
 ### iPhone (Safari)
-1. Ouvrez le dashboard dans Safari.
-2. Appuyez sur **Partager** (carré avec flèche).
-3. Sélectionnez **Sur l'écran d'accueil**.
-4. Validez.
+1. Bouton Partager → **Sur l'écran d'accueil**.
 
 ---
 
@@ -124,14 +91,13 @@ SignalShop peut être installé sur votre téléphone comme une application.
 
 | Problème | Solution |
 |----------|----------|
-| Le site ne s'affiche pas | Vérifiez que Docker Desktop tourne et que les conteneurs sont actifs (`docker compose ps`). |
-| Identifiants invalides | Réinitialisez le mot de passe avec `docker exec -it signalshop_backend python -m scripts.create_initial_user`. |
-| L'IA ne répond pas | Assurez-vous qu'aucun humain n'a pris la main dans la conversation. |
-| Les messages Signal ne partent pas | Vérifiez que le bridge est lancé et que le numéro de service est configuré dans Paramètres. |
-| Le bridge ne démarre pas | Vérifiez que Python et signal-cli sont installés et que le numéro est valide. |
+| Le site ne s'affiche pas | Vérifiez Docker Desktop et les conteneurs. |
+| Identifiants invalides | Réinitialisez avec `docker exec -it signalshop_backend python -m scripts.create_initial_user`. |
+| L'IA ne répond pas | Vérifiez qu'aucun humain n'a pris la main. |
+| Messages Signal ne partent pas | Vérifiez que le bridge est lancé. |
 
 ---
 
 ## 6. Support
 
-Pour toute question, contactez votre administrateur technique.
+Contactez votre administrateur technique.
