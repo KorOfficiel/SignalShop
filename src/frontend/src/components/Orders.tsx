@@ -62,7 +62,6 @@ function Orders() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [customers, setCustomers] = useState<Customer[]>([])
   const [products, setProducts] = useState<Product[]>([])
@@ -126,7 +125,6 @@ function Orders() {
     e.preventDefault()
     setError('')
     setMessage('')
-
     if (!selectedCustomerId) {
       setError('Veuillez sélectionner un client.')
       return
@@ -135,7 +133,6 @@ function Orders() {
       setError('Veuillez ajouter au moins un produit.')
       return
     }
-
     try {
       await api.post('/orders/direct', {
         customer_id: selectedCustomerId,
@@ -368,6 +365,9 @@ function Orders() {
             {STATUSES.map((status) => <option key={status} value={status}>{status}</option>)}
           </select>
           <div style={{ marginTop: 20 }}>
+            <button className="btn btn-success" onClick={() => handleStatusChange(selectedOrder.id, 'COMPLETED')}>
+              Marquer comme livrée
+            </button>
             <button className="btn btn-danger" onClick={() => handleCancelOrder(selectedOrder.id)}>Annuler la commande</button>
             <button className="btn btn-danger" onClick={() => handleDeleteOrder(selectedOrder.id)} style={{ marginLeft: 10 }}>Supprimer définitivement</button>
           </div>

@@ -34,6 +34,14 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
+rem Télécharger le projet s'il n'existe pas
+if not exist "src" (
+    echo Téléchargement du dépôt SignalShop...
+    git clone https://github.com/KorOfficiel/SignalShop.git temp_folder
+    xcopy /E /I temp_folder .
+    rmdir /S /Q temp_folder
+)
+
 rem Demander les informations
 echo.
 echo  Configuration de l'administrateur...
