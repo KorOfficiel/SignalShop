@@ -1,15 +1,16 @@
 #!/bin/bash
+# Script de sauvegarde chiffrée
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+BACKUP_DIR="/backups"
+mkdir -p $BACKUP_DIR
 
-# Script de sauvegarde PostgreSQL pour SignalShop
-# Usage : bash scripts/backup.sh
+# Dump de la base
+docker exec signalshop_db pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} > $BACKUP_DIR/signalshop_$TIMESTAMP.sql
 
-# Créer le dossier de sauvegarde s'il n'existe pas
-mkdir -p backups
+# Chiffrement avec GPG
+gpg --symmetric --batch --passphrase "$BACKUP_PASSPHRASE" $BACKUP_DIR/signalshop_$TIMESTAMP.sql
 
-# Nom du fichier avec date
-FILENAME="backups/signalshop_$(date +%Y%m%d_%H%M%S).sql"
+# Supprimer le fichier non chiffré
+rm $BACKUP_DIR/signalshop_$TIMESTAMP.sql
 
-# Utiliser docker exec pour lancer pg_dump à l'intérieur du conteneur
-docker exec signalshop_db pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} > "$FILENAME"
-
-echo "Sauvegarde créée : $FILENAME"
+echo "Sauvegarde chiffrée : $BACKUP_DIR/signalshop_$TIMESTAMP.sql.gpg"

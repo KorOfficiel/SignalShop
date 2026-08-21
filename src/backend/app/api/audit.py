@@ -39,3 +39,37 @@ def list_audit_events(
         AuditEvent.tenant_id == current_user.tenant_id
     ).order_by(AuditEvent.created_at.desc()).limit(100).all()
     return events
+
+@router.delete("/{event_id}", status_code=204)
+def delete_audit_event(
+    event_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Supprime un événement d'audit spécifique."""
+    if not has_permission(db, current_user, "view_audit"):
+        raise HTTPException(status_code=403, detail="Permission manquante : consulter l'audit")
+
+    event = db.query(AuditEvent).filter(
+        AuditEvent.id == event_id,
+        AuditEvent.tenant_id == current_user.tenant_id
+    ).first()
+    if not event:
+        raise HTTPException(status_code=404, detail="Événement introuvable")
+
+    db.delete(event)
+    db.commit()
+    return None
+
+@router.delete("", status_code=204)
+def clear_audit_logs(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Supprime tous les événements d'audit du tenant."""
+    if not has_permission(db, current_user, "view_audit"):
+        raise HTTPException(status_code=403, detail="Permission manquante : consulter l'audit")
+
+    db.query(AuditEvent).filter(AuditEvent.tenant_id == current_user.tenant_id).delete()
+    db.commit()
+    return None

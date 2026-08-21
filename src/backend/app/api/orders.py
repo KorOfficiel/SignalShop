@@ -4,6 +4,7 @@ from typing import List, Optional, Dict, Any
 from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel
+import json
 
 from app.db.database import get_db
 from app.models.user import User
@@ -20,6 +21,7 @@ from app.api.auth import get_current_user
 from app.services.notification_service import create_notification
 from app.services.permission_service import has_permission
 from app.services.audit_service import log_audit
+from app.services.crypto_service import encrypt_data, decrypt_data
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -38,6 +40,20 @@ class DirectOrderCreate(BaseModel):
     delivery_instructions: Optional[str] = None
     scheduled_slot_id: Optional[UUID] = None
     status: str = "CONFIRMED"
+
+def decrypt_order(order: Order):
+    """Déchiffre les champs sensibles d'une commande."""
+    if order.delivery_address:
+        try:
+            order.delivery_address = json.loads(decrypt_data(order.delivery_address))
+        except:
+            pass
+    if order.delivery_instructions:
+        try:
+            order.delivery_instructions = decrypt_data(order.delivery_instructions)
+        except:
+            pass
+    return order
 
 # ========== CRÉATION DEPUIS PANIER ==========
 
@@ -101,6 +117,10 @@ def create_order(
             product.stock_quantity -= item.quantity
             db.add(product)
 
+    # Chiffrer les données sensibles
+    encrypted_address = encrypt_data(json.dumps(order_data.delivery_address)) if order_data.delivery_address else None
+    encrypted_instructions = encrypt_data(order_data.delivery_instructions) if order_data.delivery_instructions else None
+
     order = Order(
         tenant_id=current_user.tenant_id,
         customer_id=customer_id,
@@ -108,8 +128,8 @@ def create_order(
         total_amount=total_amount,
         delivery_fee=delivery_fee,
         delivery_zone_id=order_data.delivery_zone_id,
-        delivery_address=order_data.delivery_address,
-        delivery_instructions=order_data.delivery_instructions,
+        delivery_address=encrypted_address,
+        delivery_instructions=encrypted_instructions,
         scheduled_slot_id=order_data.scheduled_slot_id,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow()
@@ -139,10 +159,11 @@ def create_order(
         type="order_created",
         message=f"Nouvelle commande #{order.id} de {order.total_amount/100:.2f} €"
     )
-    log_audit(db, current_user, "create_order", "order", str(order.id), {"total": order.total_amount})
+    log_audit(db, current_user, "create_order", "order", str(order.id))
 
     db.commit()
     db.refresh(order)
+    decrypt_order(order)
     return order
 
 # ========== CRÉATION DIRECTE ==========
@@ -221,6 +242,9 @@ def create_direct_order(
         slot.booked_count += 1
         db.add(slot)
 
+    encrypted_address = encrypt_data(json.dumps(order_data.delivery_address)) if order_data.delivery_address else None
+    encrypted_instructions = encrypt_data(order_data.delivery_instructions) if order_data.delivery_instructions else None
+
     order = Order(
         tenant_id=current_user.tenant_id,
         customer_id=customer.id,
@@ -228,8 +252,8 @@ def create_direct_order(
         total_amount=total_amount,
         delivery_fee=delivery_fee,
         delivery_zone_id=order_data.delivery_zone_id,
-        delivery_address=order_data.delivery_address,
-        delivery_instructions=order_data.delivery_instructions,
+        delivery_address=encrypted_address,
+        delivery_instructions=encrypted_instructions,
         scheduled_slot_id=order_data.scheduled_slot_id,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow()
@@ -262,10 +286,11 @@ def create_direct_order(
         type="order_created",
         message=f"Nouvelle commande #{order.id} de {order.total_amount/100:.2f} €"
     )
-    log_audit(db, current_user, "create_direct_order", "order", str(order.id), {"total": order.total_amount})
+    log_audit(db, current_user, "create_direct_order", "order", str(order.id))
 
     db.commit()
     db.refresh(order)
+    decrypt_order(order)
     return order
 
 # ========== LISTE ET DÉTAIL ==========
@@ -276,6 +301,8 @@ def list_orders(
     current_user: User = Depends(get_current_user)
 ):
     orders = db.query(Order).filter(Order.tenant_id == current_user.tenant_id).all()
+    for order in orders:
+        decrypt_order(order)
     return orders
 
 @router.get("/{order_id}", response_model=OrderRead)
@@ -290,6 +317,7 @@ def get_order(
     ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Commande introuvable")
+    decrypt_order(order)
     return order
 
 # ========== MODIFICATION ==========
@@ -318,9 +346,9 @@ def update_order(
             _release_stock_and_slot(db, order)
 
     if order_data.delivery_address is not None:
-        order.delivery_address = order_data.delivery_address
+        order.delivery_address = encrypt_data(json.dumps(order_data.delivery_address))
     if order_data.delivery_instructions is not None:
-        order.delivery_instructions = order_data.delivery_instructions
+        order.delivery_instructions = encrypt_data(order_data.delivery_instructions)
     if order_data.scheduled_slot_id is not None:
         slot = db.query(TimeSlot).filter(
             TimeSlot.id == order_data.scheduled_slot_id,
@@ -342,8 +370,7 @@ def update_order(
     order.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(order)
-    log_audit(db, current_user, "update_order", "order", str(order.id), {"new_status": order.status})
-    db.commit()
+    decrypt_order(order)
     return order
 
 # ========== ANNULATION ==========
@@ -381,6 +408,7 @@ def cancel_order(
 
     db.commit()
     db.refresh(order)
+    decrypt_order(order)
     return order
 
 # ========== SUPPRESSION ==========

@@ -1,12 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+
 from app.api import auth, catalog, cart, orders, customers, signal, scheduling, delivery, conversations, users, notifications, settings, ratings, permissions, statistics, export, audit
+from app.core.logging_config import setup_logging
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="SignalShop API")
 
+# CORS restreint : remplacer par les vrais domaines en production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://ton-domaine.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

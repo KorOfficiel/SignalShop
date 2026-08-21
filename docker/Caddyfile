@@ -1,4 +1,18 @@
-yourdomain.com {
+ton-domaine.com {
     reverse_proxy frontend:80
     reverse_proxy /api/* backend:8000
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer
+    }
+
+    rate_limit {
+        zone dynamic {
+            key {remote_host}
+            events 100
+            window 1m
+        }
+    }
 }
