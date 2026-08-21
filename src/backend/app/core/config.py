@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     signal_cli_path: str = "signal-cli"
     signal_bridge_url: str = "http://host.docker.internal:5005"
     internal_api_key: str = "change_this_internal_key"
+    encryption_key: str = ""
 
     class Config:
         env_file = ".env"

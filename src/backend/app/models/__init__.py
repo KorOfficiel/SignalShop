@@ -18,3 +18,4 @@ from app.models.notification import Notification
 from app.models.configuration import Configuration
 from app.models.rating import Rating
 from app.models.audit_event import AuditEvent
+from app.models.deploy_token import DeployToken

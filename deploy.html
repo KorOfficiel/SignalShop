@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Déployer SignalShop</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .container { background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 40px; max-width: 500px; width: 100%; text-align: center; }
+    h1 { color: #1e3a8a; }
+    input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+    button { background: #2563eb; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #1e40af; }
+    .loading { display: none; color: #2563eb; margin-top: 20px; }
+    .error { color: #dc2626; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Déployer SignalShop</h1>
+    <p>1. Demandez un token par email. 2. Entrez le token et déployez.</p>
+    <input type="email" id="email" placeholder="Email administrateur" required>
+    <input type="text" id="domain" placeholder="Domaine (ex: monsite.com)" required>
+    <input type="text" id="vps_host" placeholder="IP du VPS" required>
+    <input type="text" id="vps_user" value="root" required>
+    <input type="password" id="ssh_key" placeholder="Clé SSH privée" required>
+    <button onclick="requestToken()">Recevoir le token</button>
+    <input type="text" id="token" placeholder="Token reçu par email">
+    <button onclick="deployWithToken()">Déployer avec token</button>
+    <div class="loading" id="loading">Déploiement en cours...</div>
+    <div class="error" id="error"></div>
+  </div>
+
+  <script>
+    async function requestToken() {
+      const data = {
+        email: document.getElementById('email').value,
+        domain: document.getElementById('domain').value,
+        vps_host: document.getElementById('vps_host').value,
+        vps_user: document.getElementById('vps_user').value,
+        ssh_key: document.getElementById('ssh_key').value
+      };
+      try {
+        const resp = await fetch('http://localhost:8000/api/v1/deployer/request-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+        alert('Token envoyé ! Vérifiez votre email.');
+      } catch (err) {
+        document.getElementById('error').textContent = 'Erreur : ' + err.message;
+      }
+    }
+
+    async function deployWithToken() {
+      const token = document.getElementById('token').value;
+      if (!token) return alert('Entrez le token');
+      document.getElementById('loading').style.display = 'block';
+      try {
+        const resp = await fetch('http://localhost:8000/api/v1/deployer/deploy-with-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+        const result = await resp.json();
+        alert('Déploiement terminé ! Dashboard : ' + result.dashboard_url);
+      } catch (err) {
+        document.getElementById('error').textContent = 'Erreur : ' + err.message;
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
