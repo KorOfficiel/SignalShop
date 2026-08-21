@@ -14,11 +14,63 @@ Assistant commercial intelligent connecté à Signal. Gérez catalogue, commande
 - 📱 PWA installable sur mobile
 
 ## Captures d'écran
-![Accueil](screenshots/accueil.png)
-![Dashboard](screenshots/dashboard.png)
-![Produits](screenshots/produits.png)
-![Commande](screenshots/commande.png)
-![Conversation](screenshots/conversation.png)
+
+### Accueil
+![Accueil](screenshots/acceuil.png)
+
+### Connexion
+![Connexion](screenshots/login.png)
+
+### Tableau de bord
+![Panel](screenshots/panel.png)
+
+### Produits
+![Produits](screenshots/product.png)
+
+### Catégories
+![Catégories](screenshots/category.png)
+
+### Variantes
+![Variantes](screenshots/variantes.png)
+
+### Options
+![Options](screenshots/options.png)
+
+### Créneaux
+![Créneaux](screenshots/créneaux.png)
+
+### Livraison
+![Livraison](screenshots/livraisons.png)
+
+### Commandes
+![Commandes](screenshots/commandes.png)
+
+### Conversations
+![Conversations](screenshots/conversations.png)
+
+### Clients
+![Clients](screenshots/clients.png)
+
+### Utilisateurs
+![Utilisateurs](screenshots/utilisateurs.png)
+
+### Notifications
+![Notifications](screenshots/notifications.png)
+
+### Évaluations
+![Évaluations](screenshots/évaluations.png)
+
+### Permissions
+![Permissions](screenshots/permissions.png)
+
+### Journal d'audit
+![Journal d'audit](screenshots/journal%20audit.png)
+
+### Paramètres
+![Paramètres](screenshots/paramètres.png)
+
+### Installation
+![Installation](screenshots/installer1.png)
 
 ## Installation rapide (Windows)
 1. Téléchargez `SignalShop_Installer.exe` (ou utilisez `install.bat`).

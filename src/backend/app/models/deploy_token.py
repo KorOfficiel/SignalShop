@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, ForeignKey
+from sqlalchemy import Column, String, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from app.db.database import Base
 from datetime import datetime
@@ -12,7 +12,7 @@ class DeployToken(Base):
     domain = Column(String, nullable=False)
     vps_host = Column(String, nullable=False)
     vps_user = Column(String, default="root")
-    ssh_key_encrypted = Column(String, nullable=False)  # chiffrée avec Fernet
+    ssh_key_encrypted = Column(String, nullable=False)
     expires_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    used = Column(String, default=False)
+    used = Column(Boolean, default=False)
